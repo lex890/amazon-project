@@ -1,1 +1,1 @@
-const cart = [];
+let getCart = JSON.parse(localStorage.getItem('getCart')) || [];
