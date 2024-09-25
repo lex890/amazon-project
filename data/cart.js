@@ -1,1 +1,1 @@
-let getCart = JSON.parse(localStorage.getItem('getCart')) || [];
+export let cart = JSON.parse(localStorage.getItem('getCart')) || [];

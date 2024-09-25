@@ -1,12 +1,17 @@
-let productsHTML = '';
-displayCart();
+import { cart } from '../data/cart.js'; // Import the initial cart
+import { products } from '../data/products.js';
 
-products.forEach((product) => {
+let getCart = cart; // Create a copy of the cart
+let productsHTML = ''; // Initialize HTML to be added later 
+let timeoutId; // Timer for the 'Added' message
+displayCart(); // Display the number indicating the load of the cart
+
+// Build product HTML
+products.forEach((product) => {  
   productsHTML += `
     <div class="product-container">
       <div class="product-image-container">
-        <img class="product-image"
-          src="${product.image}">
+        <img class="product-image" src="${product.image}">
       </div>
 
       <div class="product-name limit-text-to-2-lines">
@@ -14,8 +19,7 @@ products.forEach((product) => {
       </div>
 
       <div class="product-rating-container">
-        <img class="product-rating-stars"
-          src="images/ratings/rating-${product.rating.stars * 10}.png">
+        <img class="product-rating-stars" src="images/ratings/rating-${product.rating.stars * 10}.png">
         <div class="product-rating-count link-primary">
           ${product.rating.count}
         </div>
@@ -26,8 +30,8 @@ products.forEach((product) => {
       </div>
 
       <div class="product-quantity-container">
-        <select class="js-quantity-select" id="quantity-select">
-          <option selected value="1">1</option>
+        <select class="js-quantity-select">
+          <option value="1" selected>1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
@@ -42,61 +46,58 @@ products.forEach((product) => {
 
       <div class="product-spacer"></div>
 
-      <div class="added-to-cart">
+      <div class="added-to-cart js-added-to-cart" style="opacity: 0;">
         <img src="images/icons/checkmark.png">
         Added
       </div>
 
-      <button class="add-to-cart-button button-primary js-add-to-cart"
-      data-product-id="${product.id}">
+      <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}">
         Add to Cart
       </button>
     </div>
   `;
 });
 
-document.querySelector('.js-products-grid').innerHTML = productsHTML;
+document.querySelector('.js-products-grid').innerHTML = productsHTML; // Insert the accumulated HTML code
 
-let selectedQuantity = 1;
+// Add event listeners for add-to-cart buttons
+document.querySelectorAll('.js-add-to-cart').forEach((button) => {
+  button.addEventListener('click', () => {
+    const productId = button.dataset.productId; // Get the product ID
+    const quantitySelect = button.closest('.product-container').querySelector('.js-quantity-select');
+    const quantity = Number(quantitySelect.value); // Get the selected quantity
 
-  document.querySelectorAll('.js-quantity-select').forEach((del) => {
-    del.addEventListener('change', () => {
-      selectedQuantity = Number(del.value);
-    });
-  });
+    let matchingItem = getCart.find(item => item.productId === productId); // Find the product in the cart
 
-  document.querySelectorAll('.js-add-to-cart').forEach((button) => {
-      button.addEventListener('click', () => {
-        const productId = button.dataset.productId;
-
-        let matchingItem = getCart.find(item => item.productId === productId);
-
-        if (matchingItem) {
-          matchingItem.quantity += selectedQuantity;
-        } else {
-          getCart.push({
-            productId,
-            quantity: selectedQuantity
-          });
-        }
-
-        displayCart();
-        console.log(getCart);
+    if (matchingItem) {
+      matchingItem.quantity += quantity; // Update quantity if exists
+    } else {
+      getCart.push({ // Add new item to the cart
+        productId,
+        quantity
       });
-    });
+    }
 
+    displayCart(); // Update the cart display
+    console.log(getCart); // For debugging
 
-  function displayCart() {
-    const cartQuantity = getCart.reduce((totalVal, currentVal) => {
-      return totalVal + currentVal.quantity;
-    }, 0);
+    // Show 'Added' message
+    const addedToCartDiv = button.closest('.product-container').querySelector('.added-to-cart'); 
+    addedToCartDiv.style.opacity = '1';
+    
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
 
-    document.querySelector('.js-cart-quantity')
-    .innerHTML = cartQuantity;
-      
-    localStorage.setItem('getCart', JSON.stringify(getCart));
-  }
+    timeoutId = setTimeout(() => {
+      addedToCartDiv.style.opacity = '0';
+    }, 2000);
+  });
+});
 
-
-
-  
+// Function to display the cart quantity
+function displayCart() {
+  const cartQuantity = getCart.reduce((totalVal, currentVal) => totalVal + currentVal.quantity, 0);
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity; // Update the displayed quantity
+  localStorage.setItem('getCart', JSON.stringify(getCart)); // Save cart to local storage
+}
