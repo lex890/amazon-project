@@ -1,31 +1,20 @@
-import {cart} from '../data/cart.js';
+import * as cartModule from '../data/cart.js';
 import {products} from '../data/products.js';
 import {convertMoney} from './utils/money.js';
 
-let getCart = cart;
-displayCheckout();
+let getCart = cartModule.cart;
 displayOrder();
+cartModule.numberOfCheckout(getCart);
 
-// Use event delegation
-document.querySelector('.order-summary').addEventListener('click', (event) => {
-  // Check if the clicked element has the class 'js-delete-quantity-link'
-  if (event.target.classList.contains('js-delete-quantity-link')) {
-    const productId = event.target.dataset.productId;
-    getCart = getCart.filter(item => item.productId !== productId);
-
-    displayCheckout();
-    displayOrder();
-  }
+document.querySelectorAll('.js-delete-quantity-link').forEach((button) => {
+  button.addEventListener('click', () => {
+    const productId = button.dataset.productId;
+    const updatedCart = cartModule.removeFromCart(productId);
+    cartModule.numberOfCheckout(updatedCart);
+    document.querySelector(`.js-cart-item-container-${productId}`).remove();
+  });
 });
 
-function displayCheckout() {
-  const cartQuantity = getCart.reduce((totalVal, currentVal) => {
-    return totalVal + currentVal.quantity;
-  }, 0);
-
-  document.querySelector('.return-to-home-link').innerHTML = cartQuantity;
-  localStorage.setItem('getCart', JSON.stringify(getCart));
-}
 
 function displayOrder() {
   let cartHTML = '';
@@ -33,7 +22,7 @@ function displayOrder() {
   getCart.forEach((product) => { 
     let matchingItem = products.find(item => item.id === product.productId);
     cartHTML += 
-      `<div class="cart-item-container">
+      `<div class="cart-item-container js-cart-item-container-${matchingItem.id}">
           <div class="delivery-date">
             Delivery date: Tuesday, June 21
           </div>

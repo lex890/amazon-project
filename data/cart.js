@@ -33,3 +33,25 @@ export function showAdded(button, timeoutId) {
       addedToCartDiv.style.opacity = '0';
     }, 2000);
 }
+
+export function removeFromCart(productId) {
+  const tempCart = [];
+  cart.forEach((entry) => {
+    if (entry.productId !== productId) {
+      tempCart.push(entry);
+    }
+  });
+
+  cart = tempCart;
+  localStorage.setItem('getCart', JSON.stringify(cart));
+
+  return cart;
+}
+
+export function numberOfCheckout(getCart) {
+  const cartQuantity = getCart.reduce((totalVal, currentVal) => {
+    return totalVal + currentVal.quantity;
+  }, 0);
+  
+  document.querySelector('.return-to-home-link').innerHTML = cartQuantity;
+}
