@@ -1,5 +1,6 @@
 import * as cartModule from '../data/cart.js'; // Import the initial cart
 import { products } from '../data/products.js';
+import {convertMoney} from './utils/money.js';
 
 let getCart = cartModule.cart; // Create a copy of the cart
 let productsHTML = ''; // Initialize HTML to be added later 
@@ -45,7 +46,7 @@ function updateMenu(product) {
       </div>
 
       <div class="product-price">
-        $${(product.priceCents / 100).toFixed(2)}
+        $${convertMoney(product.priceCents)}
       </div>
 
       <div class="product-quantity-container">
