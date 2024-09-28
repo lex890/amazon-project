@@ -1,6 +1,6 @@
 import * as cartModule from '../data/cart.js'; // Import the initial cart
 import { products } from '../data/products.js';
-import {convertMoney} from './utils/money.js';
+import { convertMoney } from './utils/money.js';
 
 let getCart = cartModule.cart; // Create a copy of the cart
 let productsHTML = ''; // Initialize HTML to be added later 
