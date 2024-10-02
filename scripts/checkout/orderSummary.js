@@ -35,7 +35,7 @@ export function displayOrder() {
                 <span class="update-quantity-link link-primary js-update-link" data-product-id="${matchingProduct.id}">
                   Update
                 </span>
-                <input type="number" class="quantity-input js-quantity-input-${matchingProduct.id}">
+                <input value="${cartItem.quantity}" type="number" class="quantity-input js-quantity-input-${matchingProduct.id}">
                 <span class="save-quantity-link link-primary js-save-link" data-product-id="${matchingProduct.id}">
                   Save
                 </span>
@@ -116,27 +116,37 @@ export function displayOrder() {
     });
   });
 
-  document.querySelectorAll('.js-save-link')
-  .forEach((link) => {
-    link.addEventListener('click', () => {
-      const productId = link.dataset.productId;
-
-      const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+  document.querySelectorAll('.js-save-link').forEach((link) => {
+    const productId = link.dataset.productId;
+  
+    const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+  
+    const handleSave = () => {
       const newQuantity = Number(quantityInput.value);
-
+  
       if (isNaN(newQuantity) || newQuantity < 0 || newQuantity >= 1000) {
         alert('Quantity must be at least 0 and less than 1000');
         return;
-      } 
-
+      }
+  
       cartModule.updateQuantity(productId, newQuantity);
-
+  
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.classList.remove('is-editing-quantity');
-
-      const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
-      quantityLabel.innerHTML = newQuantity;
+  
+      displayOrder(); // re-display the Order History
       displayCheckout();
+    };
+  
+    // Add click event to the link
+    link.addEventListener('click', handleSave);
+  
+    // Add keydown event to the quantity input
+    quantityInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        handleSave();
+      }
     });
   });
+  
 };

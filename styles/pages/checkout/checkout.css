@@ -213,6 +213,7 @@
 .quantity-input {
   width: 30px;
   display: none;
+  font-size: 16px;
 }
 
 .save-quantity-link {
