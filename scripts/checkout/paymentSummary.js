@@ -25,7 +25,7 @@ export function displayPayment() {
           </div>
 
           <div class="payment-summary-row">
-            <div>Items (3):</div>
+            <div class="js-item-quantity">Items ():</div>
             <div class="payment-summary-money">$${convertMoney(productPriceCents)}</div>
           </div>
 

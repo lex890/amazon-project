@@ -1,9 +1,10 @@
-import convertMoney from '../utils/money.js';
-import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
-import {getProduct} from '../../data/products.js';
 import * as deliveryModule from '../../data/deliveryOptions.js';
 import * as cartModule from '../../data/cart.js';
+import convertMoney from '../utils/money.js';
+import {displayCheckout} from './checkoutHeader.js';
 import {displayPayment} from './paymentSummary.js';
+import {getProduct} from '../../data/products.js';
+
 
 export function displayOrder() {
   let cartHTML = '';
@@ -11,11 +12,9 @@ export function displayOrder() {
   cartModule.cart.forEach((cartItem) => { 
     const cartProductId = cartItem.productId;
     const matchingProduct = getProduct(cartProductId);
-    
     const cartDeliveryOptionId = cartItem.deliveryOptionId;
     const deliveryOption = deliveryModule.getDeliveryOption(cartDeliveryOptionId);
-
-    const dateString = getDate(deliveryOption);
+    const dateString = deliveryModule.getDate(cartItem.deliveryOptionId);
     
     cartHTML += 
       `<div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
@@ -31,10 +30,18 @@ export function displayOrder() {
               <div class="product-price">$${convertMoney(matchingProduct.priceCents)}</div>
               <div class="product-quantity">
                 <span>
-                  Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+                  Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
                 </span>
-                <span class="update-quantity-link link-primary">Update</span>
-                <span class="delete-quantity-link link-primary js-delete-quantity-link" data-product-id="${matchingProduct.id}">Delete</span>
+                <span class="update-quantity-link link-primary js-update-link" data-product-id="${matchingProduct.id}">
+                  Update
+                </span>
+                <input type="number" class="quantity-input js-quantity-input-${matchingProduct.id}">
+                <span class="save-quantity-link link-primary js-save-link" data-product-id="${matchingProduct.id}">
+                  Save
+                </span>
+                <span class="delete-quantity-link link-primary js-delete-quantity-link" data-product-id="${matchingProduct.id}">
+                  Delete
+                </span>
               </div>
             </div>
   
@@ -46,13 +53,14 @@ export function displayOrder() {
             </div>
           </div>
         </div>`;
+        
   }); 
 
     function deliveryOptionHTML(matchingProduct, cartItem) {
       let deliveryOptionsHTML = '';
 
       deliveryModule.deliveryOptions.forEach((deliveryOption) => {
-        const dateString = getDate(deliveryOption);
+        const dateString = deliveryModule.getDate(deliveryOption.id);
 
         const priceString = deliveryOption.priceCents === 0 ? 
         'FREE' : `$${convertMoney(deliveryOption.priceCents)} -`;
@@ -73,40 +81,19 @@ export function displayOrder() {
             </div>
           </div>`;
         });
-
+        
       return deliveryOptionsHTML;
     };
-
-    function getDate(deliveryOption) {
-      const today = dayjs();
-    
-      const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
-      const dateString = deliveryDate.format('dddd, MMMM D');
-    
-      return dateString;
-    }
-
-    function cartQuantity() {
-      const quantityVal = cartModule.cart.reduce((totalVal, currentCart) => {
-        return totalVal + currentCart.quantity;
-      }, 0);
-
-      return quantityVal;
-    }
-  
   
   document.querySelector('.order-summary').innerHTML = cartHTML;
-  document.querySelector('.js-return-to-home-link').innerHTML = cartQuantity();
 
   document.querySelectorAll('.js-delete-quantity-link').forEach((button) => {
     button.addEventListener('click', () => {
       const productId = button.dataset.productId; // read the id
-      cartModule.removeFromCart(productId); // update the cart
-
-      const container = document.querySelector(`.js-cart-item-container-${productId}`); // select parent element to be removed
-      container.remove(); //remove the selected HTML elemen
-      displayOrder(); // recursion of the whole function
-      displayPayment();
+      cartModule.removeFromCart(productId); // update the cart 
+      displayOrder(); // re-display the Order History
+      displayPayment(); // re-display the Payment History
+      displayCheckout();
     });
   });
 
@@ -114,10 +101,42 @@ export function displayOrder() {
     selection.addEventListener('click', () => {
       const { productId, deliveryOptionId } = selection.dataset;
       cartModule.updateDeliveryOption(productId, deliveryOptionId);
-      displayOrder();
-      displayPayment();
+      displayOrder(); // re-display the Order History
+      displayPayment(); // re-display the Payment History
+      displayCheckout();
     });
   });
 
+  document.querySelectorAll('.js-update-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId;
 
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.classList.add('is-editing-quantity');
+    });
+  });
+
+  document.querySelectorAll('.js-save-link')
+  .forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId;
+
+      const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+      const newQuantity = Number(quantityInput.value);
+
+      if (isNaN(newQuantity) || newQuantity < 0 || newQuantity >= 1000) {
+        alert('Quantity must be at least 0 and less than 1000');
+        return;
+      } 
+
+      cartModule.updateQuantity(productId, newQuantity);
+
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.classList.remove('is-editing-quantity');
+
+      const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
+      quantityLabel.innerHTML = newQuantity;
+      displayCheckout();
+    });
+  });
 };
