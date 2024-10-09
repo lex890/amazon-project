@@ -136,6 +136,7 @@ export function displayOrder() {
   
       displayOrder(); // re-display the Order History
       displayCheckout();
+      displayPayment();
     };
   
     // Add click event to the link
