@@ -3,9 +3,9 @@ export let cart;
 loadFromStorage();
 
 export function loadFromStorage() {
-  cart = JSON.parse(localStorage.getItem('getCart')) || [];
+  cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  if(cart.length === 0) {
+  if(!cart) {
     cart.push({
       productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
       quantity: 2,
@@ -15,7 +15,24 @@ export function loadFromStorage() {
       quantity: 1,
       deliveryOptionId: '2'
     });
-} 
+  } 
+}
+
+// Function to add items in cart
+export function addCart(productId, quantity) {
+  let matchingItem = cart.find(item => item.productId === productId); // Find the product entry within the cart array
+
+    if (matchingItem) {
+      matchingItem.quantity += quantity; // Update quantity if exists
+    } else {
+      cart.push({ // Add new item to the cart
+        productId,
+        quantity,
+        deliveryOptionId: '1' // delivery option is set by default to 1
+      });
+    }
+
+    saveToStorage();
 }
 
 export function updateDeliveryOption(productId, deliveryOptionId) {
@@ -44,22 +61,6 @@ export function updateQuantity(productId, newQuantity) {
   matchingItem.quantity = newQuantity;
 
   saveToStorage();
-}
-
-// Function to add items in cart
-export function addCart(productId, quantity) {
-  let matchingItem = cart.find(item => item.productId === productId); // Find the product entry within the cart array
-
-    if (matchingItem) {
-      matchingItem.quantity += quantity; // Update quantity if exists
-    } else {
-      cart.push({ // Add new item to the cart
-        productId,
-        quantity,
-        deliveryOptionId: '1' // delivery option is set by default to 1
-      });
-    }
-    saveToStorage();
 }
 
 // Function to display the cart quantity
@@ -98,12 +99,6 @@ export function removeFromCart(productId) {
   return cart;
 }
 
-export function numberOfCheckout() {
-  const cartQuantity = cart.reduce((totalVal, currentVal) => totalVal + currentVal.quantity, 0);
-
-  document.querySelector('.return-to-home-link').innerHTML = cartQuantity;
-}
-
 export function saveToStorage() {
-  localStorage.setItem('getCart', JSON.stringify(cart));
+  localStorage.setItem('cart', JSON.stringify(cart));
 }
