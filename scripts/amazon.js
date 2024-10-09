@@ -2,13 +2,11 @@ import * as cartModule from '../data/cart.js'; // Import the initial cart
 import { products } from '../data/products.js';
 import { convertMoney } from './utils/money.js';
 
-let getCart = cartModule.cart; // Create a copy of the cart
-let productsHTML = ''; // Initialize HTML to be added later 
 let timeoutId; // Timer for the 'Added' message
-cartModule.displayCart(getCart); // Display the number indicating the load of the cart
+document.querySelector('.js-cart-quantity').innerHTML = cartModule.displayCart(); // Display the number indicating the load of the cart
 
-// Display every product to the main menu
-products.forEach((product) => {  
+let productsHTML = ''; // Initialize HTML to be added later 
+products.forEach((product) => {  // Display every product to the main menu
   updateMenu(product);
 });
 
@@ -21,9 +19,10 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) => {
     const quantitySelect = button.closest('.product-container').querySelector('.js-quantity-select'); // find the closest element
     const quantity = Number(quantitySelect.value); // Get the selected quantity
 
-    cartModule.addCart(productId, quantity, getCart); // Add to cart
-    cartModule.displayCart(getCart); // Update the cart display
+    cartModule.addCart(productId, quantity); // Add to cart
     cartModule.showAdded(button, timeoutId); // Show Added Message
+
+    document.querySelector('.js-cart-quantity').innerHTML = cartModule.displayCart(); // Display the number indicating the load of the cart
   });
 });
 

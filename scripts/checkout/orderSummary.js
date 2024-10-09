@@ -93,7 +93,7 @@ export function displayOrder() {
       cartModule.removeFromCart(productId); // update the cart 
       displayOrder(); // re-display the Order History
       displayPayment(); // re-display the Payment History
-      displayCheckout();
+      displayCheckout(); // re-display cart quantity
     });
   });
 
@@ -103,7 +103,7 @@ export function displayOrder() {
       cartModule.updateDeliveryOption(productId, deliveryOptionId);
       displayOrder(); // re-display the Order History
       displayPayment(); // re-display the Payment History
-      displayCheckout();
+      displayCheckout(); // re-display cart quantity
     });
   });
 
@@ -135,8 +135,8 @@ export function displayOrder() {
       container.classList.remove('is-editing-quantity');
   
       displayOrder(); // re-display the Order History
-      displayCheckout();
       displayPayment();
+      displayCheckout();
     };
   
     // Add click event to the link
