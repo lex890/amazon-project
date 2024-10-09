@@ -1,6 +1,6 @@
 import {convertMoney} from '../utils/money.js';
 
-console.log('money conversion testing');
+console.log('test suite: formatCurrency');
 
 
 console.log('Normal Number');
