@@ -5,7 +5,7 @@ loadFromStorage();
 export function loadFromStorage() {
   cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  if(!cart) {
+  if(cart.length === 0) {
     cart.push({
       productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
       quantity: 2,
@@ -31,7 +31,6 @@ export function addCart(productId, quantity) {
         deliveryOptionId: '1' // delivery option is set by default to 1
       });
     }
-
     saveToStorage();
 }
 

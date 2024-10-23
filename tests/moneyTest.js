@@ -1,26 +1,26 @@
-import {convertMoney} from '../../scripts/utils/money.js';
+import convertMoney from "../scripts/utils/money.js";
 
 console.log('test suite: formatCurrency');
+console.log('convert cents into dollars');
 
-
-console.log('Normal Number');
 if (convertMoney(2095) === '20.95') {
-  console.log('success');
+  console.log('passed');
 } else {
   console.log('failed');
 }
 
-console.log('Zero Number');
+console.log('works with 0');
+
 if (convertMoney(0) === '0.00') {
-  console.log('success');
+  console.log('passed');
 } else {
   console.log('failed');
 }
 
-console.log('Partial Cents');
+console.log('rounds up to the nearest cent');
+
 if (convertMoney(2000.5) === '20.01') {
-  console.log('success');
+  console.log('passed');
 } else {
   console.log('failed');
 }
-

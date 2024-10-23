@@ -12,8 +12,6 @@ export function displayOrder() {
   cartModule.cart.forEach((cartItem) => { 
     const cartProductId = cartItem.productId;
     const matchingProduct = getProduct(cartProductId);
-    const cartDeliveryOptionId = cartItem.deliveryOptionId;
-    const deliveryOption = deliveryModule.getDeliveryOption(cartDeliveryOptionId);
     const dateString = deliveryModule.getDate(cartItem.deliveryOptionId);
     
     cartHTML += 
@@ -28,7 +26,7 @@ export function displayOrder() {
             <div class="cart-item-details">
               <div class="product-name">${matchingProduct.name}</div>
               <div class="product-price">$${convertMoney(matchingProduct.priceCents)}</div>
-              <div class="product-quantity">
+              <div class="product-quantity js-product-quantity-${matchingProduct.id}">
                 <span>
                   Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
                 </span>
@@ -85,7 +83,7 @@ export function displayOrder() {
       return deliveryOptionsHTML;
     };
   
-  document.querySelector('.order-summary').innerHTML = cartHTML;
+  document.querySelector('.js-order-summary').innerHTML = cartHTML;
 
   document.querySelectorAll('.js-delete-quantity-link').forEach((button) => {
     button.addEventListener('click', () => {
