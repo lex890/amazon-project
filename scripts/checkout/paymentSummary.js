@@ -53,4 +53,4 @@ export function displayPayment() {
   `;
 
   document.querySelector('.js-payment-summary').innerHTML = displayPayment;
-}
+};

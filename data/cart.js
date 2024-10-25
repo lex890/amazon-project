@@ -105,7 +105,5 @@ export function removeFromCart(productId) {
     cart = tempCart;
     saveToStorage();
   }
-  
-  return cart;
 }
 

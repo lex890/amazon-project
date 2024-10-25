@@ -10,12 +10,11 @@ export function displayOrder() {
   let cartHTML = '';
 
   cartModule.cart.forEach((cartItem) => { 
-    const cartProductId = cartItem.productId;
-    const matchingProduct = getProduct(cartProductId);
+    const matchingProduct = getProduct(cartItem.productId);
     const dateString = deliveryModule.getDate(cartItem.deliveryOptionId);
     
     cartHTML += 
-      `<div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
+      `<div class="cart-item-container js-cart-item-container js-cart-item-container-${matchingProduct.id}">
           <div class="delivery-date">
             Delivery date: ${dateString}
           </div>
@@ -37,7 +36,7 @@ export function displayOrder() {
                 <span class="save-quantity-link link-primary js-save-link" data-product-id="${matchingProduct.id}">
                   Save
                 </span>
-                <span class="delete-quantity-link link-primary js-delete-quantity-link" data-product-id="${matchingProduct.id}">
+                <span class="delete-quantity-link link-primary js-delete-quantity-link js-delete-quantity-link-${matchingProduct.id}" data-product-id="${matchingProduct.id}">
                   Delete
                 </span>
               </div>
@@ -51,7 +50,6 @@ export function displayOrder() {
             </div>
           </div>
         </div>`;
-        
   }); 
 
     function deliveryOptionHTML(matchingProduct, cartItem) {
