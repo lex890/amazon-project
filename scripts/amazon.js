@@ -16,10 +16,9 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML; // Insert 
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
   button.addEventListener('click', () => {
     const productId = button.dataset.productId; // Get the product ID
-    const quantitySelect = button.closest('.product-container').querySelector('.js-quantity-select'); // find the closest element
-    const quantity = Number(quantitySelect.value); // Get the selected quantity
-
-    cartModule.addCart(productId, quantity); // Add to cart
+    const productQuantity = Number(button.closest('.product-container').querySelector('.js-quantity-select').value); // find the closest element
+    console.log(productQuantity);
+    cartModule.addCart(productId, productQuantity); // Add to cart
     cartModule.showAdded(button, timeoutId); // Show Added Message
 
     document.querySelector('.js-cart-quantity').innerHTML = cartModule.displayCart(); // Display the number indicating the load of the cart
