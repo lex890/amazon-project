@@ -24,3 +24,19 @@ if (convertMoney(2000.5) === '20.01') {
 } else {
   console.log('failed');
 }
+
+console.log('rounds down to the nearest cent');
+
+if (convertMoney(2000.4) === '20.00') {
+  console.log('passed');
+} else {
+  console.log('failed');
+}
+
+console.log('negative number');
+
+if (convertMoney(-5000) === '-50.00') {
+  console.log('passed');
+} else {
+  console.log('failed');
+}

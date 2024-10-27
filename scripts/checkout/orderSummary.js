@@ -23,8 +23,8 @@ export function displayOrder() {
             <img class="product-image" src="${matchingProduct.image}">
   
             <div class="cart-item-details">
-              <div class="product-name">${matchingProduct.name}</div>
-              <div class="product-price">$${convertMoney(matchingProduct.priceCents)}</div>
+              <div class="product-name js-product-name-${matchingProduct.id}">${matchingProduct.name}</div>
+              <div class="product-price js-product-price-${matchingProduct.id}">$${convertMoney(matchingProduct.priceCents)}</div>
               <div class="product-quantity js-product-quantity-${matchingProduct.id}">
                 <span>
                   Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
@@ -46,40 +46,11 @@ export function displayOrder() {
               <div class="delivery-options-title">
                 Choose a delivery option:
               </div>
-                ${deliveryOptionHTML(matchingProduct, cartItem)}
+                ${deliveryOption(matchingProduct.id, cartItem.deliveryOptionId)}
             </div>
           </div>
         </div>`;
   }); 
-
-    function deliveryOptionHTML(matchingProduct, cartItem) {
-      let deliveryOptionsHTML = '';
-
-      deliveryModule.deliveryOptions.forEach((deliveryOption) => {
-        const dateString = deliveryModule.getDate(deliveryOption.id);
-
-        const priceString = deliveryOption.priceCents === 0 ? 
-        'FREE' : `$${convertMoney(deliveryOption.priceCents)} -`;
-
-        const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
-        
-        deliveryOptionsHTML += `
-          <div class="delivery-option js-delivery-option" data-product-id="${matchingProduct.id}" data-delivery-option-id="${deliveryOption.id}" >
-
-            <input type="radio" ${isChecked ? 'checked' : ''} class="delivery-option-input" name="delivery-option-${matchingProduct.id}">
-            <div>
-              <div class="delivery-option-date">
-                ${dateString}
-              </div>
-              <div class="delivery-option-price">
-                ${priceString} Shipping
-              </div>
-            </div>
-          </div>`;
-        });
-        
-      return deliveryOptionsHTML;
-    };
   
   document.querySelector('.js-order-summary').innerHTML = cartHTML;
 
@@ -146,4 +117,34 @@ export function displayOrder() {
     });
   });
   
+};
+
+export function deliveryOption(matchingProduct, cartItem) {
+  let deliveryOptionsHTML = '';
+
+  deliveryModule.deliveryOptions.forEach((deliveryOption) => {
+    const deliveryOptionId = deliveryOption.id;
+    const dateString = deliveryModule.getDate(deliveryOptionId);
+
+    const priceString = deliveryOption.priceCents === 0 ? 
+    'FREE' : `$${convertMoney(deliveryOption.priceCents)} -`;
+
+    const isChecked = deliveryOptionId === cartItem;
+    
+    deliveryOptionsHTML += `
+      <div class="delivery-option js-delivery-option js-delivery-id-${matchingProduct} js-product-id-${cartItem}" data-product-id="${matchingProduct}" data-delivery-option-id="${deliveryOptionId}" >
+
+        <input type="radio" ${isChecked ? 'checked' : ''} class="delivery-option-input" name="delivery-option-${matchingProduct}">
+        <div>
+          <div class="delivery-option-date">
+            ${dateString}
+          </div>
+          <div class="delivery-option-price">
+            ${priceString} Shipping
+          </div>
+        </div>
+      </div>`;
+    });
+    
+  return deliveryOptionsHTML;
 };
