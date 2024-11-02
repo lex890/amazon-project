@@ -1,7 +1,7 @@
-import {displayCart} from '../../data/cart.js';
+import { myCart } from '../../data/cart.js';
 
 export function displayCheckout() {
-  const cartQuantity = displayCart();
+  const cartQuantity = myCart.displayCart();
 
   document.querySelector('.js-return-to-home-link')
   .innerHTML = `${cartQuantity} items`;

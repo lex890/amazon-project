@@ -1,5 +1,5 @@
 import * as deliveryModule from '../../data/deliveryOptions.js';
-import * as cartModule from '../../data/cart.js';
+import { myCart } from '../../data/cart.js';
 import convertMoney from '../utils/money.js';
 import {displayCheckout} from './checkoutHeader.js';
 import {displayPayment} from './paymentSummary.js';
@@ -9,7 +9,7 @@ import {getProduct} from '../../data/products.js';
 export function displayOrder() {
   let cartHTML = '';
 
-  cartModule.cart.forEach((cartItem) => { 
+  myCart.cartItems.forEach((cartItem) => { 
     const matchingProduct = getProduct(cartItem.productId);
     const dateString = deliveryModule.getDate(cartItem.deliveryOptionId);
     
