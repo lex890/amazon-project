@@ -1,17 +1,17 @@
-import * as deliveryModule from '../../data/deliveryOptions.js';
+import { myOptions } from '../../data/delivery.js';
 import { myCart } from '../../data/cart.js';
 import convertMoney from '../utils/money.js';
 import {displayCheckout} from './checkoutHeader.js';
 import {displayPayment} from './paymentSummary.js';
-import {getProduct} from '../../data/products.js';
+import { myProducts } from '../../data/products.js';
 
 
 export function displayOrder() {
   let cartHTML = '';
 
   myCart.cartItems.forEach((cartItem) => { 
-    const matchingProduct = getProduct(cartItem.productId);
-    const dateString = deliveryModule.getDate(cartItem.deliveryOptionId);
+    const matchingProduct = myProducts.getProduct(cartItem.productId);
+    const dateString = myOptions.getDate(cartItem.deliveryOptionId);
     
     cartHTML += 
       `<div class="cart-item-container js-cart-item-container js-cart-item-container-${matchingProduct.id}">
@@ -57,7 +57,7 @@ export function displayOrder() {
   document.querySelectorAll('.js-delete-quantity-link').forEach((button) => {
     button.addEventListener('click', () => {
       const productId = button.dataset.productId; // read the id
-      cartModule.removeFromCart(productId); // update the cart 
+      myCart.removeFromCart(productId); // update the cart 
       displayOrder(); // re-display the Order History
       displayPayment(); // re-display the Payment History
       displayCheckout(); // re-display cart quantity
@@ -67,7 +67,7 @@ export function displayOrder() {
   document.querySelectorAll('.js-delivery-option').forEach((selection) => {
     selection.addEventListener('click', () => {
       const { productId, deliveryOptionId } = selection.dataset;
-      cartModule.updateDeliveryOption(productId, deliveryOptionId);
+      myCart.updateDeliveryOption(productId, deliveryOptionId);
       displayOrder(); // re-display the Order History
       displayPayment(); // re-display the Payment History
       displayCheckout(); // re-display cart quantity
@@ -96,12 +96,12 @@ export function displayOrder() {
         return;
       }
   
-      cartModule.updateQuantity(productId, newQuantity);
+      myCart.updateQuantity(productId, newQuantity);
   
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.classList.remove('is-editing-quantity');
   
-      displayOrder(); // re-display the Order History
+      displayOrder(); 
       displayPayment();
       displayCheckout();
     };
@@ -122,9 +122,9 @@ export function displayOrder() {
 export function deliveryOption(matchingProduct, cartItem) {
   let deliveryOptionsHTML = '';
 
-  deliveryModule.deliveryOptions.forEach((deliveryOption) => {
+  myOptions.deliveryOptions.forEach((deliveryOption) => {
     const deliveryOptionId = deliveryOption.id;
-    const dateString = deliveryModule.getDate(deliveryOptionId);
+    const dateString = myOptions.getDate(deliveryOptionId);
 
     const priceString = deliveryOption.priceCents === 0 ? 
     'FREE' : `$${convertMoney(deliveryOption.priceCents)} -`;

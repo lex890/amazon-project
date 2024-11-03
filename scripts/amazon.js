@@ -13,7 +13,7 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) => {
     console.log(productQuantity);
     myCart.addCart(productId, productQuantity); // Add to cart
     myCart.showAdded(button, timeoutId); // Show Added Message
-
+    // redisplaying and modifying the DOM
     document.querySelector('.js-cart-quantity').innerHTML = myCart.displayCart(); // Display the number indicating the load of the cart
   });
 });

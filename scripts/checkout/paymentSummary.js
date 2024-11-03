@@ -1,6 +1,6 @@
-import * as deliveryModule from '../../data/deliveryOptions.js';
+import { myOptions } from '../../data/delivery.js';
 import { myCart } from '../../data/cart.js';
-import { getProduct } from '../../data/products.js';
+import { myProducts } from '../../data/products.js';
 import convertMoney from '../utils/money.js';
 
 export function displayPayment() {
@@ -8,10 +8,10 @@ export function displayPayment() {
   let shippingPriceCents = 0;
 
   myCart.cartItems.forEach((cartItem) => {
-    const matchingProduct = getProduct(cartItem.productId);
+    const matchingProduct = myProducts.getProduct(cartItem.productId);
     productPriceCents += matchingProduct.priceCents * cartItem.quantity;
 
-    const deliveryOptionId = deliveryModule.getDeliveryOption(cartItem.deliveryOptionId);
+    const deliveryOptionId = myOptions.getDeliveryOption(cartItem.deliveryOptionId);
     shippingPriceCents += deliveryOptionId.priceCents;
   });
 
