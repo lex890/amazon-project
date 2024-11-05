@@ -3,14 +3,14 @@ import { myCart } from '../../data/cart.js';
 import convertMoney from '../utils/money.js';
 import {displayCheckout} from './checkoutHeader.js';
 import {displayPayment} from './paymentSummary.js';
-import { myProducts } from '../../data/products.js';
+import { getProduct } from '../../data/products.js';
 
 
 export function displayOrder() {
   let cartHTML = '';
 
   myCart.cartItems.forEach((cartItem) => { 
-    const matchingProduct = myProducts.getProduct(cartItem.productId);
+    const matchingProduct = getProduct(cartItem.productId);
     const dateString = myOptions.getDate(cartItem.deliveryOptionId);
     
     cartHTML += 

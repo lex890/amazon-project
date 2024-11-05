@@ -73,9 +73,12 @@ class Cart {
   }
 
   displayCart() {
-    const cartQuantity = this.cartItems.reduce((totalVal, currentVal) => 
-      totalVal + currentVal.quantity, 0);
-  
+    let cartQuantity = 0
+    
+    this.cartItems.forEach((cartItem) => {
+      cartQuantity += cartItem.quantity;
+    });
+
     return cartQuantity;
   }
 

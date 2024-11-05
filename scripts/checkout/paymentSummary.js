@@ -1,6 +1,6 @@
 import { myOptions } from '../../data/delivery.js';
 import { myCart } from '../../data/cart.js';
-import { myProducts } from '../../data/products.js';
+import { getProduct } from '../../data/products.js';
 import convertMoney from '../utils/money.js';
 
 export function displayPayment() {
@@ -8,7 +8,7 @@ export function displayPayment() {
   let shippingPriceCents = 0;
 
   myCart.cartItems.forEach((cartItem) => {
-    const matchingProduct = myProducts.getProduct(cartItem.productId);
+    const matchingProduct = getProduct(cartItem.productId);
     productPriceCents += matchingProduct.priceCents * cartItem.quantity;
 
     const deliveryOptionId = myOptions.getDeliveryOption(cartItem.deliveryOptionId);
