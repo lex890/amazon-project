@@ -42,6 +42,8 @@ function renderProductsGrid() {
             <option value="10">10</option>
           </select>
         </div>
+
+        ${product.extraInfoHTML()}
   
         <div class="product-spacer"></div>
   
