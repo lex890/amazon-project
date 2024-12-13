@@ -108,7 +108,7 @@ class Cart {
       this.cartItems = [];
     } else {
       this.cartItems = tempCart;
-      saveToStorage();
+      this.saveToStorage();
     }
   }
 }
