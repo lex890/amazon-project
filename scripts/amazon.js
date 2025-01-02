@@ -1,6 +1,9 @@
 import { myCart } from '../data/cart.js'; // Import the myCart class
-import { myProducts } from '../data/products.js';
- // Timer for the 'Added' message
+import { myProducts, loadProducts } from '../data/products.js';
+
+loadProducts(renderProductsGrid);
+
+// Timer for the 'Added' message
 let timeoutId;
 
 function renderProductsGrid() {
@@ -69,22 +72,15 @@ function renderProductsGrid() {
 
   // Add event listeners for add-to-cart buttons
   document.querySelectorAll('.js-add-to-cart').forEach((button) => {
-  button.addEventListener('click', () => {
-    const productId = button.dataset.productId; // Get the product ID
-    const productQuantity = Number(button.closest('.product-container').querySelector('.js-quantity-select').value); // find the closest element
-    myCart.addCart(productId, productQuantity); // Add to cart
-    myCart.showAdded(button, timeoutId); // Show Added Message
-    // redisplaying and modifying the DOM
-    document.querySelector('.js-cart-quantity').innerHTML = updateCartQuantity(); // Display the number indicating the load of the cart
+    button.addEventListener('click', () => {
+      const productId = button.dataset.productId; // Get the product ID
+      const productQuantity = Number(button.closest('.product-container').querySelector('.js-quantity-select').value); // find the closest element
+      myCart.addCart(productId, productQuantity); // Add to cart
+      myCart.showAdded(button, timeoutId); // Show Added Message
+      // redisplaying and modifying the DOM
+      document.querySelector('.js-cart-quantity').innerHTML = updateCartQuantity(); // Display the number indicating the load of the cart
+    });
   });
-});
 
 };
 
-
-
-
-
-
-
-renderProductsGrid();
