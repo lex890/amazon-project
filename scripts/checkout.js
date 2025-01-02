@@ -2,12 +2,26 @@ import {displayOrder} from './checkout/orderSummary.js';
 import {displayPayment} from './checkout/paymentSummary.js';
 import {displayCheckout} from './checkout/checkoutHeader.js';
 import {loadProducts} from '../data/products.js';
+import {loadCart} from '../data/cart.js';
 
-// import '../data/backend-practice.js';
+Promise.all([
+  new Promise((resolve) => { 
+    loadProducts(() => {
+      resolve('value1');
+    });
+  }),
+  new Promise((resolve) => { 
+    loadCart(() => {
+      resolve();
+    });
+  })
 
-loadProducts(() => { // another call back function for http request
+]).then((values) => {
+  console.log(values);
   displayOrder();
   displayPayment();
   displayCheckout();
 });
- 
+
+
+
